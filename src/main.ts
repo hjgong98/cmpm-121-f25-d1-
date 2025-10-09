@@ -13,6 +13,26 @@ statsColumn.style.width = "200px";
 statsColumn.innerHTML = "<h3>Player Stats</h3>";
 app.appendChild(statsColumn);
 
+// initial stats
+let exp = 0;
+
+// deno-lint-ignore prefer-const
+let level = 0;
+
+// deno-lint-ignore prefer-const
+let statPoints = 5;
+
+// display elements
+const expDisplay = document.createElement("div");
+const levelDisplay = document.createElement("div");
+const statPointsDisplay = document.createElement("div");
+expDisplay.textContent = `EXP: ${exp}`;
+levelDisplay.textContent = `Level: ${level}`;
+statPointsDisplay.textContent = `Stat Points: ${statPoints}`;
+statsColumn.appendChild(expDisplay);
+statsColumn.appendChild(levelDisplay);
+statsColumn.appendChild(statPointsDisplay);
+
 // column 2
 const combatColumn = document.createElement("div");
 combatColumn.style.width = "200px";
@@ -37,6 +57,13 @@ clickButton.style.width = "180px";
 clickButton.style.margin = "10px auto";
 clickButton.style.display = "block";
 combatColumn.appendChild(clickButton);
+
+// click handler
+clickButton.addEventListener("click", () => {
+  exp++;
+  expDisplay.textContent = `EXP: ${exp}`;
+});
+app.appendChild(combatColumn);
 
 // column 3 (achievement shop reset)
 const shopColumn = document.createElement("div");
