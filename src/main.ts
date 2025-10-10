@@ -19,8 +19,8 @@ let exp = 0;
 let level = 0;
 let statPoints = 5;
 let gold = 5;
-let expPerSec = 1;
-let goldPerSec = 1;
+const expPerSec = 1;
+const goldPerSec = 1;
 let weaponLevel = 0;
 let passiveExp = 0;
 let passiveGold = 0;
@@ -87,7 +87,7 @@ Object.assign(monsterBox.style, {
   margin: "0 auto",
   display: "flex",
   alignItems: "center",
-  justifyContent: "center"
+  justifyContent: "center",
 });
 monsterBox.textContent = "Training Dummy";
 combatColumn.appendChild(monsterBox);
@@ -185,11 +185,6 @@ function updateShopDisplay() {
     Cost: ${cost} gold
   `;
 
-  // Make sure text is readable
-  weaponBox.style.color = "#000";         // Black text
-  weaponBox.style.backgroundColor = "#fff"; // White background
-  weaponBox.style.boxSizing = "border-box";
-  
   buyButton.disabled = gold < cost;
 }
 
@@ -205,7 +200,9 @@ setInterval(() => {
     const gainedExp = expPerSec;
     exp += gainedExp;
     passiveExp += gainedExp;
-    passiveExpBox.innerHTML = `Passive EXP: ${expPerSec}/s<br>Accumulate: ${Math.floor(passiveExp)}`;
+    passiveExpBox.innerHTML = `Passive EXP: ${expPerSec}/s<br>Accumulate: ${
+      Math.floor(passiveExp)
+    }`;
     passiveExpBox.style.backgroundColor = "#e0ffe0";
     passiveExpBox.style.color = "#006600";
   }
@@ -214,7 +211,9 @@ setInterval(() => {
     const gainedGold = goldPerSec;
     gold += gainedGold;
     passiveGold += gainedGold;
-    passiveGoldBox.innerHTML = `Passive Gold: ${goldPerSec}/s<br>Accumulated: ${Math.floor(passiveGold)}`;
+    passiveGoldBox.innerHTML = `Passive Gold: ${goldPerSec}/s<br>Accumulated: ${
+      Math.floor(passiveGold)
+    }`;
     passiveGoldBox.style.backgroundColor = "#fff0e0";
     passiveGoldBox.style.color = "#996600";
   }
