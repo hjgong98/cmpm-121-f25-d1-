@@ -185,6 +185,11 @@ function updateShopDisplay() {
     Cost: ${cost} gold
   `;
 
+  // Make sure text is readable
+  weaponBox.style.color = "#000";         // Black text
+  weaponBox.style.backgroundColor = "#fff"; // White background
+  weaponBox.style.boxSizing = "border-box";
+
   buyButton.disabled = gold < cost;
 }
 
