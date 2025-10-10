@@ -17,17 +17,24 @@ app.appendChild(statsColumn);
 let exp = 0;
 let level = 0;
 let statPoints = 5;
+// let gold = 0;
+// let goldPerSec = 0;
+// let expPerSec = 0;
+// let enhanceLevel = 0;
 
 // display elements
 const expDisplay = document.createElement("div");
 const levelDisplay = document.createElement("div");
 const statPointsDisplay = document.createElement("div");
+const goldDisplay = document.createElement("div");
+goldDisplay.style.display = "none"; // hidden until level 5
 
 updateStatsDisplay();
 
 statsColumn.appendChild(expDisplay);
 statsColumn.appendChild(levelDisplay);
 statsColumn.appendChild(statPointsDisplay);
+statsColumn.appendChild(goldDisplay);
 
 // column 2
 const combatColumn = document.createElement("div");
@@ -54,6 +61,14 @@ clickButton.style.margin = "10px auto";
 clickButton.style.display = "block";
 combatColumn.appendChild(clickButton);
 
+// create boxes
+
+// box 1 (unlocks at level 3)
+
+// box 2 (unlocks at level 5)
+
+// box 3 (tbc)
+
 // click handler
 clickButton.addEventListener("click", () => {
   exp++;
@@ -62,10 +77,27 @@ clickButton.addEventListener("click", () => {
 app.appendChild(combatColumn);
 
 // column 3 (achievement shop reset)
-const shopColumn = document.createElement("div");
-shopColumn.style.width = "200px";
-shopColumn.innerHTML = "<h3>Shop</h3>";
-app.appendChild(shopColumn);
+const miscellColumn = document.createElement("div");
+miscellColumn.style.width = "200px";
+miscellColumn.innerHTML = "<h3>Achievements</h3>";
+app.appendChild(miscellColumn);
+
+// Achievements box
+const achievementsBox = document.createElement("div");
+achievementsBox.style.width = "180px";
+achievementsBox.style.height = "180px";
+achievementsBox.style.border = "2px solid #555";
+achievementsBox.style.margin = "0 auto";
+achievementsBox.style.display = "flex";
+achievementsBox.style.alignItems = "center";
+achievementsBox.style.justifyContent = "center";
+achievementsBox.textContent = "Achievements";
+miscellColumn.appendChild(achievementsBox);
+
+// add shop title
+
+// add shop box (unlocks at level 5)
+// for section :) delete later
 
 // update stats function
 function updateStatsDisplay() {
@@ -73,6 +105,7 @@ function updateStatsDisplay() {
   let currentExp = exp;
   let currentLevel = 0;
   let expNeeded = 5;
+  // note: dont forget to add stuff here  -delete when done
 
   while (currentExp >= expNeeded) {
     currentExp -= expNeeded;
