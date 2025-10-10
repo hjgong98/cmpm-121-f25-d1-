@@ -212,21 +212,57 @@ setInterval(() => {
     passiveExpBox.style.color = "#006600";
   }
 
-  if (level >= 5) {
-    const gainedGold = goldPerSec;
-    gold += gainedGold;
-    passiveGold += gainedGold;
-    passiveGoldBox.innerHTML = `Passive Gold: ${goldPerSec}/s<br>Accumulated: ${
-      Math.floor(passiveGold)
-    }`;
-    passiveGoldBox.style.backgroundColor = "#fff0e0";
-    passiveGoldBox.style.color = "#996600";
-  }
+  // if (level >= 5) {
+  //   const gainedGold = goldPerSec;
+  //   gold += gainedGold;
+  //   passiveGold += gainedGold;
+  //   passiveGoldBox.innerHTML = `Passive Gold: ${goldPerSec}/s<br>Accumulated: ${
+  //     Math.floor(passiveGold)
+  //   }`;
+  //   passiveGoldBox.style.backgroundColor = "#fff0e0";
+  //   passiveGoldBox.style.color = "#996600";
+  // }
 
   // update global display
   updateStatsDisplay();
   if (level >= 5) updateShopDisplay();
 }, 1000);
+
+// --- Move passive GOLD to requestAnimationFrame ---
+let lastTime = 0;
+let goldAccumulator = 0;
+
+function animate(timestamp: number) {
+  if (!lastTime) lastTime = timestamp;
+  const deltaTime = timestamp - lastTime;
+  lastTime = timestamp;
+
+  if (level >= 5) {
+    // Accumulate time toward 1000ms
+    goldAccumulator += deltaTime;
+    if (goldAccumulator >= 1000) {
+      const intervals = Math.floor(goldAccumulator / 1000);
+      const gainedGold = intervals * goldPerSec;
+      gold += gainedGold;
+      passiveGold += gainedGold;
+      goldAccumulator -= intervals * 1000;
+
+      // Update UI
+      passiveGoldBox.innerHTML =
+        `Passive Gold: ${goldPerSec}/s<br>Accumulated: ${
+          Math.floor(passiveGold)
+        }`;
+      passiveGoldBox.style.backgroundColor = "#fff0e0";
+      passiveGoldBox.style.color = "#996600";
+
+      updateStatsDisplay();
+      updateShopDisplay();
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
 
 // shop purchase logic
 buyButton.addEventListener("click", () => {
