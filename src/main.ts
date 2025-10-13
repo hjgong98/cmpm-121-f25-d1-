@@ -1,6 +1,6 @@
 // src/main.ts
 
-// set up
+// basic app setup
 const app = document.createElement("div");
 app.style.display = "flex";
 app.style.gap = "20px";
@@ -8,7 +8,7 @@ app.style.padding = "20px";
 app.style.fontFamily = "sans-serif";
 document.body.appendChild(app);
 
-// column 1: player stats
+// column 1 : player stats
 const statsColumn = document.createElement("div");
 statsColumn.style.width = "200px";
 statsColumn.innerHTML = "<h3>Player Stats</h3>";
@@ -20,7 +20,7 @@ let level = 0;
 let statPoints = 5;
 let gold = 5;
 
-// ascension / reset system
+// reset
 let resets = 0;
 let ascensionMultiplier = 1;
 
@@ -30,7 +30,7 @@ let critRate = 5;
 let critDamage = 50;
 let luck = 0;
 
-// equipment / upgrades
+// equipment
 let weaponLevel = 0;
 let helmetLevel = 0;
 let charmLevel = 0;
@@ -41,24 +41,24 @@ let goldPerSec = 1;
 let passiveExp = 0;
 let passiveGold = 0;
 
-// combat and enemy stae
+// combat
 let currentEnemy = "Training Dummy";
 let enemyHP = 0;
 let maxEnemyHP = 0;
 
-// level milestone flags
+// level milestones
 let atLevel3 = false;
 let atLevel5 = false;
 let atLevel10 = false;
 
-// stat rows with labels and +/- buttons
+// create sta trow
 function createStatRow(label: string, value: number | string) {
   const row = document.createElement("div");
   row.style.display = "flex";
   row.style.alignItems = "center";
   row.style.justifyContent = "space-between";
   row.style.margin = "6px 0";
-  row.style.fontSize = "14px"
+  row.style.fontSize = "14px";
 
   const labelSpan = document.createElement("span");
   labelSpan.textContent = `${label}: ${value}`;
@@ -89,41 +89,43 @@ function createStatRow(label: string, value: number | string) {
   return { row, labelSpan, minusBtn, plusBtn };
 }
 
-// display elements
+// ui
 const expDisplay = document.createElement("div");
 const levelDisplay = document.createElement("div");
+
+// statpointsdisplay
 const statPointsDisplay = document.createElement("div");
-statsPointsDisplay.style.margin = "10px 0";
-statPointsDisplay.style.textContent = `Stat Points: ${statPoints}`;
+statPointsDisplay.style.margin = "10px 0";
+statPointsDisplay.textContent = `Stat Points: ${statPoints}`;
+
 const goldDisplay = document.createElement("div");
 goldDisplay.style.display = "none";
 
+// append
 statsColumn.appendChild(expDisplay);
 statsColumn.appendChild(levelDisplay);
 statsColumn.appendChild(statPointsDisplay);
 statsColumn.appendChild(goldDisplay);
 
 // stat rows
-let strRow, crRow, cdRow, luckRow;
-let strLabel, crLabel, cdLabel, luckLabel;
+const strRow = createStatRow("STR", strength);
+const crRow = createStatRow("Crit Rate", `${critRate}%`);     // Correct order!
+const cdRow = createStatRow("Crit Damage", `${critDamage}%`);
+const luckRow = createStatRow("Luck", `${luck}%`);
 
-strRow = createStatRow("STR", strength);
-crRow = createStatRow("Crit Rate", `${critRate}%`);
-cdRow = createStatRow("Crit Damage", `${critDamage}%`);
-luckRow = createStatRow("Luck", `${luck}%`);
+// label
+const strLabel = strRow.labelSpan;
+const crLabel = crRow.labelSpan;
+const cdLabel = cdRow.labelSpan;
+const luckLabel = luckRow.labelSpan;
 
-strLabel = strRow.labelSpan;
-crLabel = cdRow.labelSpan;
-cdLabel = crRow.labelSpan;
-cdLabel = crRow.labelSpan;
-luckLabel = luckRow.labelSpan;
-
+// append
 statsColumn.appendChild(strRow.row);
 statsColumn.appendChild(crRow.row);
 statsColumn.appendChild(cdRow.row);
 statsColumn.appendChild(luckRow.row); 
 
-// update stats function
+// update 
 function updateStatDisplays() {
   statPointsDisplay.textContent = `Stat Points: ${statPoints}`;
   strLabel.textContent = `STR: ${strength}`;
@@ -132,9 +134,8 @@ function updateStatDisplays() {
   luckLabel.textContent = `Luck: ${luck}%`;
 }
 
-// Update stats and level
+// update stat display
 function updateStatsDisplay() {
-  // calculate current level and progress
   let currentExp = exp;
   let currentLevel = 0;
   let expNeeded = 5;
@@ -145,29 +146,25 @@ function updateStatsDisplay() {
     expNeeded *= 2;
   }
 
-  // level up logic
+  // Level up
   if (currentLevel > level) {
     level = currentLevel;
     statPoints += 5;
 
-    // unlock the milestones
-    if (level >= 3 && !atLevel3) {
-      atLevel3 = true;
-    }
+    // level markers
+    if (level >= 3 && !atLevel3) atLevel3 = true;
     if (level >= 5 && !atLevel5) {
       atLevel5 = true;
       goldDisplay.style.display = "block";
       weaponBox.style.display = "block";
       buyButton.style.display = "block";
     }
-    if (level >= 10 && !atLevel10) {
-      atLevel10 = true;
-    }
+    if (level >= 10 && !atLevel10) atLevel10 = true;
   }
 
-  // Update UI
+  // update ui
   expDisplay.textContent = `EXP: ${exp}`;
-  levelDisplay.textContent = `Level: ${level} (${currentExp}/${expNeeded})`;
+  levelDisplay.textContent = `Level: ${level} (${Math.floor(currentExp)}/${expNeeded})`;
   if (level >= 5) {
     goldDisplay.textContent = `Gold: ${Math.floor(gold)}`;
   }
@@ -175,25 +172,14 @@ function updateStatsDisplay() {
   updateStatDisplays();
 }
 
-// stat buttons logic
-
-// STR
+// stat button logic
 strRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0) {
-    strength++;
-    statPoints--;
-    updateStatDisplays();
-  }
+  if (statPoints > 0) { strength++; statPoints--; updateStatDisplays(); }
 });
 strRow.minusBtn.addEventListener("click", () => {
-  if (strength > 0) {
-    strength--;
-    statPoints++;
-    updateStatDisplays();
-  }
+  if (strength > 0) { strength--; statPoints++; updateStatDisplays(); }
 });
 
-// Crit Rate (max 100%)
 crRow.plusBtn.addEventListener("click", () => {
   if (statPoints > 0 && critRate < 100) {
     critRate += 5;
@@ -203,43 +189,21 @@ crRow.plusBtn.addEventListener("click", () => {
   }
 });
 crRow.minusBtn.addEventListener("click", () => {
-  if (critRate > 5) {
-    critRate -= 5;
-    statPoints++;
-    updateStatDisplays();
-  }
+  if (critRate > 5) { critRate -= 5; statPoints++; updateStatDisplays(); }
 });
 
-// Crit Damage
 cdRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0) {
-    critDamage += 10;
-    statPoints--;
-    updateStatDisplays();
-  }
+  if (statPoints > 0) { critDamage += 10; statPoints--; updateStatDisplays(); }
 });
 cdRow.minusBtn.addEventListener("click", () => {
-  if (critDamage > 50) {
-    critDamage -= 10;
-    statPoints++;
-    updateStatDisplays();
-  }
+  if (critDamage > 50) { critDamage -= 10; statPoints++; updateStatDisplays(); }
 });
 
-// Luck
 luckRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0) {
-    luck += 10;
-    statPoints++;
-    updateStatDisplays();
-  }
+  if (statPoints > 0) { luck += 10; statPoints++; updateStatDisplays(); }
 });
 luckRow.minusBtn.addEventListener("click", () => {
-  if (luck > 0) {
-    luck -= 10;
-    statPoints++;
-    updateStatDisplays();
-  }
+  if (luck > 0) { luck -= 10; statPoints++; updateStatDisplays(); }
 });
 
 // column 2: combat
@@ -248,29 +212,52 @@ combatColumn.style.width = "200px";
 combatColumn.innerHTML = "<h3>Combat</h3>";
 app.appendChild(combatColumn);
 
-// monster box
-const monsterBox = document.createElement("div");
-Object.assign(monsterBox.style, {
+// enemy box
+const enemyBox = document.createElement("div");
+Object.assign(enemyBox.style, {
   width: "180px",
   height: "180px",
   border: "2px solid #555",
   margin: "0 auto",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+  position: "relative",
+  backgroundColor: "#fff",
+  textAlign: "center",
+  fontSize: "14px",
+  overflow: "hidden",
 });
-monsterBox.textContent = "Training Dummy";
-combatColumn.appendChild(monsterBox);
 
-// attack
-const clickButton = document.createElement("button");
-clickButton.textContent = "⚔ Attack! ⚔";
-clickButton.style.width = "180px";
-clickButton.style.margin = "10px auto";
-clickButton.style.display = "block";
-combatColumn.appendChild(clickButton);
+// hp
+const hpDisplay = document.createElement("div");
+hpDisplay.style.position = "absolute";
+hpDisplay.style.top = "8px";
+hpDisplay.style.left = "8px";
+hpDisplay.style.color = "red";
+hpDisplay.style.fontWeight = "bold";
+hpDisplay.style.fontSize = "12px";
 
-// passive stat boxes
+// enemy name
+const enemyNameDisplay = document.createElement("div");
+enemyNameDisplay.style.position = "absolute";
+enemyNameDisplay.style.bottom = "8px";
+enemyNameDisplay.style.left = "50%";
+enemyNameDisplay.style.transform = "translateX(-50%)";
+enemyNameDisplay.style.fontWeight = "bold";
+enemyNameDisplay.style.color = "#333";
+enemyNameDisplay.style.fontSize = "14px";
+
+enemyBox.appendChild(hpDisplay);
+enemyBox.appendChild(enemyNameDisplay);
+combatColumn.appendChild(enemyBox);
+
+// attack button
+const attackButton = document.createElement("button");
+attackButton.textContent = "⚔ Attack! ⚔";
+attackButton.style.width = "180px";
+attackButton.style.margin = "10px auto";
+attackButton.style.display = "block";
+combatColumn.appendChild(attackButton);
+
+// passive boxes
 const createPassiveBox = (text: string) => {
   const box = document.createElement("div");
   Object.assign(box.style, {
@@ -288,14 +275,79 @@ const createPassiveBox = (text: string) => {
   return box;
 };
 
-// passive boxes
 const passiveExpBox = createPassiveBox("Unlocks at level 3");
 const passiveGoldBox = createPassiveBox("Unlocks at level 5");
 const placeholderBox = createPassiveBox("Coming soon...");
-
 combatColumn.appendChild(passiveExpBox);
 combatColumn.appendChild(passiveGoldBox);
 combatColumn.appendChild(placeholderBox);
+
+// spawn enemy
+function spawnEnemy() {
+  let isMonster = false;
+  if (level >= 10) isMonster = Math.random() < 0.5;
+  else if (level >= 5) isMonster = Math.random() < 0.25;
+
+  currentEnemy = isMonster ? "Monster" : "Training Dummy";
+
+  let minHP: number, maxHP: number;
+  if (level < 5) { minHP = 25; maxHP = 75; }
+  else if (level < 10) { minHP = 50; maxHP = 100; }
+  else { minHP = 75; maxHP = 125; }
+
+  enemyHP = Math.floor(minHP + Math.random() * (maxHP - minHP + 1));
+  maxEnemyHP = enemyHP;
+
+  hpDisplay.textContent = `HP: ${Math.floor(enemyHP)}`;
+  enemyNameDisplay.textContent = currentEnemy;
+}
+
+spawnEnemy();
+
+// attack button
+attackButton.addEventListener("click", () => {
+  // only allow attack if enemy is alive
+  if (enemyHP <= 0) return;
+
+  // exp per hit
+  const expPerHit = 1 + weaponLevel;
+  exp += expPerHit;
+
+  // calc damage
+  const minDamage = 5 + (2 * level) + weaponLevel;
+  const maxDamage = minDamage + strength;
+  let damage = Math.floor(minDamage + Math.random() * (maxDamage - minDamage + 1));
+
+  // did it crit
+  if (Math.random() * 100 < critRate) {
+    damage = Math.floor(damage * (1 + critDamage / 100));
+  }
+
+  // apply damage immediately
+  enemyHP -= damage;
+
+  // hpdate hp display
+  hpDisplay.textContent = `HP: ${Math.max(0, Math.floor(enemyHP))}`;
+
+  // 🎉 6. If enemy dies
+  if (enemyHP <= 0) {
+    const baseReward = maxEnemyHP;
+    if (currentEnemy === "Training Dummy") {
+      exp += baseReward;
+    } else {
+      exp += Math.floor(baseReward / 2);
+      gold += Math.floor(baseReward / 2);
+    }
+    
+    // respawn
+    spawnEnemy();
+  }
+
+  // update ui
+  updateStatsDisplay();
+});
+
+updateStatsDisplay();
 
 // column 3 (achievement shop reset)
 const miscellColumn = document.createElement("div");
@@ -362,12 +414,6 @@ function updateShopDisplay() {
 
   buyButton.disabled = gold < cost;
 }
-
-// click handler
-clickButton.addEventListener("click", () => {
-  exp += 1 + weaponLevel; // Base + weapon bonus
-  updateStatsDisplay();
-});
 
 // passive exp system
 setInterval(() => {
