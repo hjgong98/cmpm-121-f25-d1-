@@ -51,14 +51,88 @@ let atLevel3 = false;
 let atLevel5 = false;
 let atLevel10 = false;
 
+// stat rows with labels and +/- buttons
+function createStatRow(label: string, value: number | string) {
+  const row = document.createElement("div");
+  row.style.display = "flex";
+  row.style.alignItems = "center";
+  row.style.justifyContent = "space-between";
+  row.style.margin = "6px 0";
+  row.style.fontSize = "14px"
+
+  const labelSpan = document.createElement("span");
+  labelSpan.textContent = `${label}: ${value}`;
+  row.appendChild(labelSpan);
+
+  const buttonContainer = document.createElement("div");
+  buttonContainer.style.display = "flex";
+  buttonContainer.style.gap = "4px";
+
+  const minusBtn = document.createElement("button");
+  minusBtn.textContent = "–";
+  minusBtn.style.width = "26px";
+  minusBtn.style.height = "26px";
+  minusBtn.style.padding = "0";
+  minusBtn.style.fontSize = "18px";
+
+  const plusBtn = document.createElement("button");
+  plusBtn.textContent = "+";
+  plusBtn.style.width = "26px";
+  plusBtn.style.height = "26px";
+  plusBtn.style.padding = "0";
+  plusBtn.style.fontSize = "18px";
+
+  buttonContainer.appendChild(minusBtn);
+  buttonContainer.appendChild(plusBtn);
+  row.appendChild(buttonContainer);
+
+  return { row, labelSpan, minusBtn, plusBtn };
+}
+
 // display elements
 const expDisplay = document.createElement("div");
 const levelDisplay = document.createElement("div");
 const statPointsDisplay = document.createElement("div");
+statsPointsDisplay.style.margin = "10px 0";
+statPointsDisplay.style.textContent = `Stat Points: ${statPoints}`;
 const goldDisplay = document.createElement("div");
 goldDisplay.style.display = "none";
 
+statsColumn.appendChild(expDisplay);
+statsColumn.appendChild(levelDisplay);
+statsColumn.appendChild(statPointsDisplay);
+statsColumn.appendChild(goldDisplay);
+
+// stat rows
+let strRow, crRow, cdRow, luckRow;
+let strLabel, crLabel, cdLabel, luckLabel;
+
+strRow = createStatRow("STR", strength);
+crRow = createStatRow("Crit Rate", `${critRate}%`);
+cdRow = createStatRow("Crit Damage", `${critDamage}%`);
+luckRow = createStatRow("Luck", `${luck}%`);
+
+strLabel = strRow.labelSpan;
+crLabel = cdRow.labelSpan;
+cdLabel = crRow.labelSpan;
+cdLabel = crRow.labelSpan;
+luckLabel = luckRow.labelSpan;
+
+statsColumn.appendChild(strRow.row);
+statsColumn.appendChild(crRow.row);
+statsColumn.appendChild(cdRow.row);
+statsColumn.appendChild(luckRow.row); 
+
 // update stats function
+function updateStatDisplays() {
+  statPointsDisplay.textContent = `Stat Points: ${statPoints}`;
+  strLabel.textContent = `STR: ${strength}`;
+  crLabel.textContent = `Crit Rate: ${critRate}%`;
+  cdLabel.textContent = `Crit Damage: ${critDamage}%`;
+  luckLabel.textContent = `Luck: ${luck}%`;
+}
+
+// Update stats and level
 function updateStatsDisplay() {
   // calculate current level and progress
   let currentExp = exp;
@@ -71,32 +145,102 @@ function updateStatsDisplay() {
     expNeeded *= 2;
   }
 
-  // level up
+  // level up logic
   if (currentLevel > level) {
     level = currentLevel;
     statPoints += 5;
 
-    // gold display unlocks at level 5
-    if (level >= 5) {
+    // unlock the milestones
+    if (level >= 3 && !atLevel3) {
+      atLevel3 = true;
+    }
+    if (level >= 5 && !atLevel5) {
+      atLevel5 = true;
       goldDisplay.style.display = "block";
       weaponBox.style.display = "block";
       buyButton.style.display = "block";
     }
+    if (level >= 10 && !atLevel10) {
+      atLevel10 = true;
+    }
   }
 
-  // update display
+  // Update UI
   expDisplay.textContent = `EXP: ${exp}`;
   levelDisplay.textContent = `Level: ${level} (${currentExp}/${expNeeded})`;
-  statPointsDisplay.textContent = `Stat Points: ${statPoints}`;
   if (level >= 5) {
     goldDisplay.textContent = `Gold: ${Math.floor(gold)}`;
   }
+
+  updateStatDisplays();
 }
 
-statsColumn.appendChild(expDisplay);
-statsColumn.appendChild(levelDisplay);
-statsColumn.appendChild(statPointsDisplay);
-statsColumn.appendChild(goldDisplay);
+// stat buttons logic
+
+// STR
+strRow.plusBtn.addEventListener("click", () => {
+  if (statPoints > 0) {
+    strength++;
+    statPoints--;
+    updateStatDisplays();
+  }
+});
+strRow.minusBtn.addEventListener("click", () => {
+  if (strength > 0) {
+    strength--;
+    statPoints++;
+    updateStatDisplays();
+  }
+});
+
+// Crit Rate (max 100%)
+crRow.plusBtn.addEventListener("click", () => {
+  if (statPoints > 0 && critRate < 100) {
+    critRate += 5;
+    statPoints--;
+    if (critRate > 100) critRate = 100;
+    updateStatDisplays();
+  }
+});
+crRow.minusBtn.addEventListener("click", () => {
+  if (critRate > 5) {
+    critRate -= 5;
+    statPoints++;
+    updateStatDisplays();
+  }
+});
+
+// Crit Damage
+cdRow.plusBtn.addEventListener("click", () => {
+  if (statPoints > 0) {
+    critDamage += 10;
+    statPoints--;
+    updateStatDisplays();
+  }
+});
+cdRow.minusBtn.addEventListener("click", () => {
+  if (critDamage > 50) {
+    critDamage -= 10;
+    statPoints++;
+    updateStatDisplays();
+  }
+});
+
+// Luck
+luckRow.plusBtn.addEventListener("click", () => {
+  if (statPoints > 0) {
+    luck += 10;
+    statPoints++;
+    updateStatDisplays();
+  }
+});
+luckRow.minusBtn.addEventListener("click", () => {
+  if (luck > 0) {
+    luck -= 10;
+    statPoints++;
+    updateStatDisplays();
+  }
+});
 
 // column 2: combat
 const combatColumn = document.createElement("div");
@@ -225,7 +369,7 @@ clickButton.addEventListener("click", () => {
   updateStatsDisplay();
 });
 
-// passive income system
+// passive exp system
 setInterval(() => {
   if (level >= 3) {
     const gainedExp = expPerSec;
@@ -238,23 +382,12 @@ setInterval(() => {
     passiveExpBox.style.color = "#006600";
   }
 
-  // if (level >= 5) {
-  //   const gainedGold = goldPerSec;
-  //   gold += gainedGold;
-  //   passiveGold += gainedGold;
-  //   passiveGoldBox.innerHTML = `Passive Gold: ${goldPerSec}/s<br>Accumulated: ${
-  //     Math.floor(passiveGold)
-  //   }`;
-  //   passiveGoldBox.style.backgroundColor = "#fff0e0";
-  //   passiveGoldBox.style.color = "#996600";
-  // }
-
   // update global display
   updateStatsDisplay();
   if (level >= 5) updateShopDisplay();
 }, 1000);
 
-// --- Move passive GOLD to requestAnimationFrame ---
+// passive gold
 let lastTime = 0;
 let goldAccumulator = 0;
 
