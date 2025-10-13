@@ -14,16 +14,42 @@ statsColumn.style.width = "200px";
 statsColumn.innerHTML = "<h3>Player Stats</h3>";
 app.appendChild(statsColumn);
 
-// game variables
+// core variables
 let exp = 0;
 let level = 0;
 let statPoints = 5;
 let gold = 5;
-const expPerSec = 1;
-const goldPerSec = 1;
+
+// ascension / reset system
+let resets = 0;
+let ascensionMultiplier = 1;
+
+// player stats
+let strength = 0;
+let critRate = 5;
+let critDamage = 50;
+let luck = 0;
+
+// equipment / upgrades
 let weaponLevel = 0;
+let helmetLevel = 0;
+let charmLevel = 0;
+
+// passive income
+let expPerSec = 1;
+let goldPerSec = 1;
 let passiveExp = 0;
 let passiveGold = 0;
+
+// combat and enemy stae
+let currentEnemy = "Training Dummy";
+let enemyHP = 0;
+let maxEnemyHP = 0;
+
+// level milestone flags
+let atLevel3 = false;
+let atLevel5 = false;
+let atLevel10 = false;
 
 // display elements
 const expDisplay = document.createElement("div");

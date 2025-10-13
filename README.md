@@ -32,7 +32,9 @@ top title: achievements
 a square box( save this for something later and have it be achievements that can be earned by playing the game)
 another title: shops  
 box called helmet upgrades: level 0 --- 2 gold
+  increases exp / gold from passive sources by x2
 box called weapon upgrades: level 0 – 2 gold
+  adds to the damage formula
 box called charm: level 0 – 2 gold
   
 reset button – unlocks after level 100 – multiplies any exp and gold gained with each reset ( 1 reset makes it all be multiplied by 2, 2 resets makes it all be multiplied by 3, etc ) and then everything is set to base – level 0, 5 stat points, etc.
