@@ -21,8 +21,8 @@ let statPoints = 5;
 let gold = 5;
 
 // reset
-let resets = 0;
-let ascensionMultiplier = 1;
+// const resets = 0;
+// const ascensionMultiplier = 1;
 
 // player stats
 let strength = 0;
@@ -36,8 +36,7 @@ let helmetLevel = 0;
 let charmLevel = 0;
 
 // passive income
-let expPerSec = 1;
-let goldPerSec = 1;
+const expPerSec = 1;
 let passiveExp = 0;
 let passiveGold = 0;
 
@@ -109,7 +108,7 @@ statsColumn.appendChild(goldDisplay);
 
 // stat rows
 const strRow = createStatRow("STR", strength);
-const crRow = createStatRow("Crit Rate", `${critRate}%`);     // Correct order!
+const crRow = createStatRow("Crit Rate", `${critRate}%`); // Correct order!
 const cdRow = createStatRow("Crit Damage", `${critDamage}%`);
 const luckRow = createStatRow("Luck", `${luck}%`);
 
@@ -123,9 +122,9 @@ const luckLabel = luckRow.labelSpan;
 statsColumn.appendChild(strRow.row);
 statsColumn.appendChild(crRow.row);
 statsColumn.appendChild(cdRow.row);
-statsColumn.appendChild(luckRow.row); 
+statsColumn.appendChild(luckRow.row);
 
-// update 
+// update
 function updateStatDisplays() {
   statPointsDisplay.textContent = `Stat Points: ${statPoints}`;
   strLabel.textContent = `STR: ${strength}`;
@@ -168,7 +167,9 @@ function updateStatsDisplay() {
 
   // update ui
   expDisplay.textContent = `EXP: ${exp}`;
-  levelDisplay.textContent = `Level: ${level} (${Math.floor(currentExp)}/${expNeeded})`;
+  levelDisplay.textContent = `Level: ${level} (${
+    Math.floor(currentExp)
+  }/${expNeeded})`;
   if (level >= 5) {
     goldDisplay.textContent = `Gold: ${Math.floor(gold)}`;
   }
@@ -178,10 +179,18 @@ function updateStatsDisplay() {
 
 // stat button logic
 strRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0) { strength++; statPoints--; updateStatDisplays(); }
+  if (statPoints > 0) {
+    strength++;
+    statPoints--;
+    updateStatDisplays();
+  }
 });
 strRow.minusBtn.addEventListener("click", () => {
-  if (strength > 0) { strength--; statPoints++; updateStatDisplays(); }
+  if (strength > 0) {
+    strength--;
+    statPoints++;
+    updateStatDisplays();
+  }
 });
 
 crRow.plusBtn.addEventListener("click", () => {
@@ -193,21 +202,41 @@ crRow.plusBtn.addEventListener("click", () => {
   }
 });
 crRow.minusBtn.addEventListener("click", () => {
-  if (critRate > 5) { critRate -= 5; statPoints++; updateStatDisplays(); }
+  if (critRate > 5) {
+    critRate -= 5;
+    statPoints++;
+    updateStatDisplays();
+  }
 });
 
 cdRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0) { critDamage += 10; statPoints--; updateStatDisplays(); }
+  if (statPoints > 0) {
+    critDamage += 10;
+    statPoints--;
+    updateStatDisplays();
+  }
 });
 cdRow.minusBtn.addEventListener("click", () => {
-  if (critDamage > 50) { critDamage -= 10; statPoints++; updateStatDisplays(); }
+  if (critDamage > 50) {
+    critDamage -= 10;
+    statPoints++;
+    updateStatDisplays();
+  }
 });
 
 luckRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0) { luck += 10; statPoints++; updateStatDisplays(); }
+  if (statPoints > 0) {
+    luck += 10;
+    statPoints++;
+    updateStatDisplays();
+  }
 });
 luckRow.minusBtn.addEventListener("click", () => {
-  if (luck > 0) { luck -= 10; statPoints++; updateStatDisplays(); }
+  if (luck > 0) {
+    luck -= 10;
+    statPoints++;
+    updateStatDisplays();
+  }
 });
 
 // column 2: combat
@@ -295,9 +324,16 @@ function spawnEnemy() {
   currentEnemy = isMonster ? "Monster" : "Training Dummy";
 
   let minHP: number, maxHP: number;
-  if (level < 5) { minHP = 25; maxHP = 75; }
-  else if (level < 10) { minHP = 50; maxHP = 100; }
-  else { minHP = 75; maxHP = 125; }
+  if (level < 5) {
+    minHP = 25;
+    maxHP = 75;
+  } else if (level < 10) {
+    minHP = 50;
+    maxHP = 100;
+  } else {
+    minHP = 75;
+    maxHP = 125;
+  }
 
   enemyHP = Math.floor(minHP + Math.random() * (maxHP - minHP + 1));
   maxEnemyHP = enemyHP;
@@ -320,7 +356,9 @@ attackButton.addEventListener("click", () => {
   // calc damage
   const minDamage = 5 + (2 * level) + weaponLevel;
   const maxDamage = minDamage + strength;
-  let damage = Math.floor(minDamage + Math.random() * (maxDamage - minDamage + 1));
+  let damage = Math.floor(
+    minDamage + Math.random() * (maxDamage - minDamage + 1),
+  );
 
   // did it crit
   if (Math.random() * 100 < critRate) {
@@ -342,7 +380,7 @@ attackButton.addEventListener("click", () => {
       exp += Math.floor(baseReward / 2);
       gold += Math.floor(baseReward / 2);
     }
-    
+
     // respawn
     spawnEnemy();
   }
@@ -525,13 +563,16 @@ function animate(timestamp: number) {
       const intervals = Math.floor(goldAccumulator / 1000);
       const gainedGoldPerSec = 1 + helmetLevel;
       const gainedGold = intervals * gainedGoldPerSec;
-      
+
       gold += gainedGold;
       passiveGold += gainedGold;
       goldAccumulator -= intervals * 1000;
 
       // update UI
-      passiveGoldBox.innerHTML = `Passive Gold: ${gainedGoldPerSec}/s<br>Accumulated: ${Math.floor(passiveGold)}`;
+      passiveGoldBox.innerHTML =
+        `Passive Gold: ${gainedGoldPerSec}/s<br>Accumulated: ${
+          Math.floor(passiveGold)
+        }`;
       passiveGoldBox.style.backgroundColor = "#fff0e0";
       passiveGoldBox.style.color = "#996600";
 
@@ -562,7 +603,7 @@ weaponBuyButton.addEventListener("click", () => {
   if (gold >= weaponCost) {
     gold -= weaponCost;
     weaponLevel++;
-    
+
     updateStatsDisplay();
     updateShopDisplay();
   }
