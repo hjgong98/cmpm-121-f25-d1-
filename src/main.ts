@@ -156,7 +156,7 @@ function updateStatsDisplay() {
     if (level >= 5 && !atLevel5) {
       atLevel5 = true;
       goldDisplay.style.display = "block";
-      weaponBox.style.display = "block";
+      helmetBox.style.display = "block";
       buyButton.style.display = "block";
     }
     if (level >= 10 && !atLevel10) atLevel10 = true;
@@ -345,6 +345,7 @@ attackButton.addEventListener("click", () => {
 
   // update ui
   updateStatsDisplay();
+  updateShopDisplay();
 });
 
 updateStatsDisplay();
@@ -355,7 +356,7 @@ miscellColumn.style.width = "200px";
 miscellColumn.innerHTML = "<h3>Achievements</h3>";
 app.appendChild(miscellColumn);
 
-// Achievements box
+// achievements box
 const achievementsBox = document.createElement("div");
 Object.assign(achievementsBox.style, {
   width: "180px",
@@ -365,6 +366,9 @@ Object.assign(achievementsBox.style, {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  backgroundColor: "#f9f9f9",
+  color: "#888",
+  fontSize: "14px",
 });
 achievementsBox.textContent = "Achievements";
 miscellColumn.appendChild(achievementsBox);
@@ -376,8 +380,8 @@ shopTitle.style.marginTop = "20px";
 miscellColumn.appendChild(shopTitle);
 
 // shop info
-const weaponBox = document.createElement("div");
-Object.assign(weaponBox.style, {
+const helmetBox = document.createElement("div");
+Object.assign(helmetBox.style, {
   width: "180px",
   height: "40px", // Fixed height
   border: "2px solid #555",
@@ -387,7 +391,7 @@ Object.assign(weaponBox.style, {
   padding: "8px 0",
   color: "#fff",
 });
-miscellColumn.appendChild(weaponBox);
+miscellColumn.appendChild(helmetBox);
 
 // purchase button
 const buyButton = document.createElement("button");
@@ -399,18 +403,18 @@ miscellColumn.appendChild(buyButton);
 
 // update shop
 function updateShopDisplay() {
-  if (level < 5) return;
+  if (!atLevel5) return;
 
-  const cost = Math.pow(2, weaponLevel + 1);
-  weaponBox.innerHTML = `
-    Weapon Level: ${weaponLevel}<br>
+  const cost = Math.pow(2, helmetLevel + 1);
+  helmetBox.innerHTML = `
+    Helmet Level: ${helmetLevel}<br>
     Cost: ${cost} gold
   `;
 
   // Make sure text is readable
-  weaponBox.style.color = "#000"; // Black text
-  weaponBox.style.backgroundColor = "#fff"; // White background
-  weaponBox.style.boxSizing = "border-box";
+  helmetBox.style.color = "#000"; // Black text
+  helmetBox.style.backgroundColor = "#fff"; // White background
+  helmetBox.style.boxSizing = "border-box";
 
   buyButton.disabled = gold < cost;
 }
@@ -418,10 +422,10 @@ function updateShopDisplay() {
 // passive exp system
 setInterval(() => {
   if (level >= 3) {
-    const gainedExp = expPerSec;
+    const gainedExp = expPerSec + helmetLevel;
     exp += gainedExp;
     passiveExp += gainedExp;
-    passiveExpBox.innerHTML = `Passive EXP: ${expPerSec}/s<br>Accumulate: ${
+    passiveExpBox.innerHTML = `Passive EXP: ${gainedExp}/s<br>Accumulate: ${
       Math.floor(passiveExp)
     }`;
     passiveExpBox.style.backgroundColor = "#e0ffe0";
@@ -447,16 +451,15 @@ function animate(timestamp: number) {
     goldAccumulator += deltaTime;
     if (goldAccumulator >= 1000) {
       const intervals = Math.floor(goldAccumulator / 1000);
-      const gainedGold = intervals * goldPerSec;
+      const gainedGoldPerSec = 1 + helmetLevel;  // Helmets boost gold too!
+      const gainedGold = intervals * gainedGoldPerSec;
+      
       gold += gainedGold;
       passiveGold += gainedGold;
-      goldAccumulator -= intervals * 1000;
+      goldAccumulator -= intervals * 1000; // Remove full seconds
 
       // Update UI
-      passiveGoldBox.innerHTML =
-        `Passive Gold: ${goldPerSec}/s<br>Accumulated: ${
-          Math.floor(passiveGold)
-        }`;
+      passiveGoldBox.innerHTML = `Passive Gold: ${gainedGoldPerSec}/s<br>Accumulated: ${Math.floor(passiveGold)}`;
       passiveGoldBox.style.backgroundColor = "#fff0e0";
       passiveGoldBox.style.color = "#996600";
 
@@ -471,10 +474,10 @@ requestAnimationFrame(animate);
 
 // shop purchase logic
 buyButton.addEventListener("click", () => {
-  const cost = Math.pow(2, weaponLevel + 1);
+  const cost = Math.pow(2, helmetLevel + 1);
   if (gold >= cost) {
     gold -= cost;
-    weaponLevel++;
+    helmetLevel++;
     updateStatsDisplay();
     updateShopDisplay();
   }
