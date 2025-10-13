@@ -160,6 +160,8 @@ function updateStatsDisplay() {
       buyButton.style.display = "block";
       weaponBox.style.display = "block";
       weaponBuyButton.style.display = "block";
+      charmBox.style.display = "block";
+      charmBuyButton.style.display = "block";
     }
     if (level >= 10 && !atLevel10) atLevel10 = true;
   }
@@ -426,6 +428,29 @@ weaponBuyButton.style.margin = "10px auto";
 weaponBuyButton.style.display = "none";
 miscellColumn.appendChild(weaponBuyButton);
 
+// charm shop
+const charmBox = document.createElement("div");
+Object.assign(charmBox.style, {
+  width: "180px",
+  height: "40px",
+  border: "2px solid #555",
+  margin: "10px auto",
+  fontSize: "12px",
+  textAlign: "center",
+  padding: "8px 0",
+  boxSizing: "border-box",
+  color: "#000",
+  backgroundColor: "#fff",
+});
+miscellColumn.appendChild(charmBox);
+
+const charmBuyButton = document.createElement("button");
+charmBuyButton.textContent = "Buy";
+charmBuyButton.style.width = "180px";
+charmBuyButton.style.margin = "10px auto";
+charmBuyButton.style.display = "none";
+miscellColumn.appendChild(charmBuyButton);
+
 // update shop
 function updateShopDisplay() {
   if (!atLevel5) return;
@@ -442,7 +467,13 @@ function updateShopDisplay() {
     Cost: ${weaponCost} gold
   `;
 
-  // Make sure text is readable
+  const charmCost = Math.pow(2, charmLevel + 1);
+  charmBox.innerHTML = `
+  Charm Level: ${charmLevel}<br>
+  Cost: ${charmCost} gold
+  `;
+
+  // make sure text is readable
   helmetBox.style.color = "#000";
   helmetBox.style.backgroundColor = "#fff";
   helmetBox.style.boxSizing = "border-box";
@@ -451,8 +482,13 @@ function updateShopDisplay() {
   weaponBox.style.backgroundColor = "#fff";
   weaponBox.style.boxSizing = "border-box";
 
+  charmBox.style.color = "#000";
+  charmBox.style.backgroundColor = "#fff";
+  charmBox.style.boxSizing = "border-box";
+
   buyButton.disabled = gold < cost;
   weaponBuyButton.disabled = gold < weaponCost;
+  charmBuyButton.disabled = gold < charmCost;
 }
 
 // passive exp system
@@ -527,6 +563,17 @@ weaponBuyButton.addEventListener("click", () => {
     gold -= weaponCost;
     weaponLevel++;
     
+    updateStatsDisplay();
+    updateShopDisplay();
+  }
+});
+
+// charm button Logic
+charmBuyButton.addEventListener("click", () => {
+  const charmCost = Math.pow(2, charmLevel + 1);
+  if (gold >= charmCost) {
+    gold -= charmCost;
+    charmLevel++;
     updateStatsDisplay();
     updateShopDisplay();
   }
