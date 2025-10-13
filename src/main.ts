@@ -158,6 +158,8 @@ function updateStatsDisplay() {
       goldDisplay.style.display = "block";
       helmetBox.style.display = "block";
       buyButton.style.display = "block";
+      weaponBox.style.display = "block";
+      weaponBuyButton.style.display = "block";
     }
     if (level >= 10 && !atLevel10) atLevel10 = true;
   }
@@ -383,7 +385,7 @@ miscellColumn.appendChild(shopTitle);
 const helmetBox = document.createElement("div");
 Object.assign(helmetBox.style, {
   width: "180px",
-  height: "40px", // Fixed height
+  height: "40px",
   border: "2px solid #555",
   margin: "0 auto",
   fontSize: "12px",
@@ -398,8 +400,31 @@ const buyButton = document.createElement("button");
 buyButton.textContent = "Buy";
 buyButton.style.width = "180px";
 buyButton.style.margin = "10px auto";
-buyButton.style.display = "none"; // Hidden until level 5
+buyButton.style.display = "none";
 miscellColumn.appendChild(buyButton);
+
+// weapon shop
+const weaponBox = document.createElement("div");
+Object.assign(weaponBox.style, {
+  width: "180px",
+  height: "40px",
+  border: "2px solid #555",
+  margin: "10px auto",
+  fontSize: "12px",
+  textAlign: "center",
+  padding: "8px 0",
+  boxSizing: "border-box",
+  color: "#000",
+  backgroundColor: "#fff",
+});
+miscellColumn.appendChild(weaponBox);
+
+const weaponBuyButton = document.createElement("button");
+weaponBuyButton.textContent = "Buy";
+weaponBuyButton.style.width = "180px";
+weaponBuyButton.style.margin = "10px auto";
+weaponBuyButton.style.display = "none";
+miscellColumn.appendChild(weaponBuyButton);
 
 // update shop
 function updateShopDisplay() {
@@ -411,12 +436,23 @@ function updateShopDisplay() {
     Cost: ${cost} gold
   `;
 
+  const weaponCost = Math.pow(2, weaponLevel + 1);
+  weaponBox.innerHTML = `
+    Weapon Level: ${weaponLevel}<br>
+    Cost: ${weaponCost} gold
+  `;
+
   // Make sure text is readable
-  helmetBox.style.color = "#000"; // Black text
-  helmetBox.style.backgroundColor = "#fff"; // White background
+  helmetBox.style.color = "#000";
+  helmetBox.style.backgroundColor = "#fff";
   helmetBox.style.boxSizing = "border-box";
 
+  weaponBox.style.color = "#000";
+  weaponBox.style.backgroundColor = "#fff";
+  weaponBox.style.boxSizing = "border-box";
+
   buyButton.disabled = gold < cost;
+  weaponBuyButton.disabled = gold < weaponCost;
 }
 
 // passive exp system
@@ -447,18 +483,18 @@ function animate(timestamp: number) {
   lastTime = timestamp;
 
   if (level >= 5) {
-    // Accumulate time toward 1000ms
+    // accumulate time toward 1000ms
     goldAccumulator += deltaTime;
     if (goldAccumulator >= 1000) {
       const intervals = Math.floor(goldAccumulator / 1000);
-      const gainedGoldPerSec = 1 + helmetLevel;  // Helmets boost gold too!
+      const gainedGoldPerSec = 1 + helmetLevel;
       const gainedGold = intervals * gainedGoldPerSec;
       
       gold += gainedGold;
       passiveGold += gainedGold;
-      goldAccumulator -= intervals * 1000; // Remove full seconds
+      goldAccumulator -= intervals * 1000;
 
-      // Update UI
+      // update UI
       passiveGoldBox.innerHTML = `Passive Gold: ${gainedGoldPerSec}/s<br>Accumulated: ${Math.floor(passiveGold)}`;
       passiveGoldBox.style.backgroundColor = "#fff0e0";
       passiveGoldBox.style.color = "#996600";
@@ -478,6 +514,19 @@ buyButton.addEventListener("click", () => {
   if (gold >= cost) {
     gold -= cost;
     helmetLevel++;
+
+    updateStatsDisplay();
+    updateShopDisplay();
+  }
+});
+
+// weapon purchase logic
+weaponBuyButton.addEventListener("click", () => {
+  const weaponCost = Math.pow(2, weaponLevel + 1);
+  if (gold >= weaponCost) {
+    gold -= weaponCost;
+    weaponLevel++;
+    
     updateStatsDisplay();
     updateShopDisplay();
   }
