@@ -50,7 +50,7 @@ let atLevel3 = false;
 let atLevel5 = false;
 let atLevel10 = false;
 
-// create sta trow
+// create stat row
 function createStatRow(label: string, value: number | string) {
   const row = document.createElement("div");
   row.style.display = "flex";
@@ -86,6 +86,38 @@ function createStatRow(label: string, value: number | string) {
   row.appendChild(buttonContainer);
 
   return { row, labelSpan, minusBtn, plusBtn };
+}
+
+// helper function
+function setupStatButtons(
+  minusBtn: HTMLButtonElement,
+  plusBtn: HTMLButtonElement,
+  getValue: () => number,
+  setValue: (value: number) => void,
+  canIncrement: () => boolean = () => statPoints > 0,
+  onIncrement: () => void = () => {
+    statPoints--;
+  },
+  onDecrement: () => void = () => {
+    statPoints++;
+  },
+) {
+  plusBtn.addEventListener("click", () => {
+    if (canIncrement()) {
+      setValue(getValue() + 1);
+      onIncrement();
+      updateStatDisplays();
+    }
+  });
+
+  minusBtn.addEventListener("click", () => {
+    const currentValue = getValue();
+    if (currentValue > 0) {
+      setValue(currentValue - 1);
+      onDecrement();
+      updateStatDisplays();
+    }
+  });
 }
 
 // ui
@@ -177,67 +209,57 @@ function updateStatsDisplay() {
   updateStatDisplays();
 }
 
-// stat button logic
-strRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0) {
-    strength++;
-    statPoints--;
-    updateStatDisplays();
-  }
-});
-strRow.minusBtn.addEventListener("click", () => {
-  if (strength > 0) {
-    strength--;
-    statPoints++;
-    updateStatDisplays();
-  }
-});
+// strength
+setupStatButtons(
+  strRow.minusBtn,
+  strRow.plusBtn,
+  () => strength,
+  (val) => {
+    strength = val;
+  },
+);
 
-crRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0 && critRate < 100) {
-    critRate += 5;
+// crit rate with cap
+setupStatButtons(
+  crRow.minusBtn,
+  crRow.plusBtn,
+  () => critRate,
+  (val) => {
+    critRate = val;
+  },
+  () => statPoints > 0 && critRate < 100,
+  () => {
     statPoints--;
-    if (critRate > 100) critRate = 100;
-    updateStatDisplays();
-  }
-});
-crRow.minusBtn.addEventListener("click", () => {
-  if (critRate > 5) {
-    critRate -= 5;
-    statPoints++;
-    updateStatDisplays();
-  }
-});
+  },
+);
 
-cdRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0) {
-    critDamage += 10;
+// crit damage
+setupStatButtons(
+  cdRow.minusBtn,
+  cdRow.plusBtn,
+  () => critDamage,
+  (val) => {
+    critDamage = val;
+  },
+  () => statPoints > 0,
+  () => {
     statPoints--;
-    updateStatDisplays();
-  }
-});
-cdRow.minusBtn.addEventListener("click", () => {
-  if (critDamage > 50) {
-    critDamage -= 10;
-    statPoints++;
-    updateStatDisplays();
-  }
-});
+  },
+);
 
-luckRow.plusBtn.addEventListener("click", () => {
-  if (statPoints > 0) {
-    luck += 10;
-    statPoints++;
-    updateStatDisplays();
-  }
-});
-luckRow.minusBtn.addEventListener("click", () => {
-  if (luck > 0) {
-    luck -= 10;
-    statPoints++;
-    updateStatDisplays();
-  }
-});
+// luck (increments by 10, special rule)
+setupStatButtons(
+  luckRow.minusBtn,
+  luckRow.plusBtn,
+  () => luck,
+  (val) => {
+    luck = val;
+  },
+  () => statPoints > 0,
+  () => {
+    statPoints--;
+  },
+);
 
 // column 2: combat
 const combatColumn = document.createElement("div");
