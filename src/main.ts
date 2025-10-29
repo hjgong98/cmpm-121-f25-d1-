@@ -14,28 +14,28 @@ statsColumn.style.width = "200px";
 statsColumn.innerHTML = "<h3>Player Stats</h3>";
 app.appendChild(statsColumn);
 
-// core variables
+// core variables for player
 let exp = 0;
 let level = 0;
 let statPoints = 5;
 let gold = 5;
 
-// reset
+// reset values
 // add in the future
 // reset button resets game to the very beginning, but increases exp/gold gain by # of resets
 
-// player stats
+// player stats (will be increased from using statPoints)
 let strength = 0;
 let critRate = 5;
 let critDamage = 50;
 let luck = 0;
 
-// equipment
+// equipment levels (affects gameplay)
 let weaponLevel = 0;
 let helmetLevel = 0;
 let charmLevel = 0;
 
-// passive income
+// passive income (gold and exp gained per second)
 const expPerSec = 1;
 let passiveExp = 0;
 let passiveGold = 0;
@@ -45,7 +45,7 @@ let currentEnemy = "Training Dummy";
 let enemyHP = 0;
 let maxEnemyHP = 0;
 
-// level milestones
+// level milestones (will unlock extra features)
 let atLevel3 = false;
 let atLevel5 = false;
 let atLevel10 = false;
@@ -88,7 +88,7 @@ function createStatRow(label: string, value: number | string) {
   return { row, labelSpan, minusBtn, plusBtn };
 }
 
-// helper function
+// helper function for stats
 function setupStatButtons(
   minusBtn: HTMLButtonElement,
   plusBtn: HTMLButtonElement,
