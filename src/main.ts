@@ -21,8 +21,8 @@ let statPoints = 5;
 let gold = 5;
 
 // reset
-// const resets = 0;
-// const ascensionMultiplier = 1;
+// add in the future
+// reset button resets game to the very beginning, but increases exp/gold gain by # of resets
 
 // player stats
 let strength = 0;
