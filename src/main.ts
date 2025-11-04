@@ -14,6 +14,15 @@ statsColumn.style.width = "200px";
 statsColumn.innerHTML = "<h3>Player Stats</h3>";
 app.appendChild(statsColumn);
 
+statsColumn.style.backgroundImage =
+  'url("https://img.craftpix.net/2023/10/Free-Summer-Pixel-Art-Backgrounds3.jpg")';
+statsColumn.style.backgroundSize = "cover";
+statsColumn.style.backgroundPosition = "center";
+statsColumn.style.backgroundRepeat = "no-repeat";
+statsColumn.style.borderRadius = "8px"; // soft corners for vibe
+statsColumn.style.position = "relative";
+statsColumn.style.overflow = "hidden";
+
 // core variables for player
 let exp = 0;
 let level = 0;
@@ -267,6 +276,15 @@ combatColumn.style.width = "200px";
 combatColumn.innerHTML = "<h3>Combat</h3>";
 app.appendChild(combatColumn);
 
+combatColumn.style.backgroundImage =
+  'url("https://img.craftpix.net/2023/10/Free-Summer-Pixel-Art-Backgrounds3.jpg")';
+combatColumn.style.backgroundSize = "cover";
+combatColumn.style.backgroundPosition = "center";
+combatColumn.style.backgroundRepeat = "no-repeat";
+combatColumn.style.borderRadius = "8px";
+combatColumn.style.position = "relative";
+combatColumn.style.overflow = "hidden";
+
 // enemy box
 const enemyBox = document.createElement("div");
 Object.assign(enemyBox.style, {
@@ -457,6 +475,15 @@ const miscellColumn = document.createElement("div");
 miscellColumn.style.width = "200px";
 miscellColumn.innerHTML = "<h3>Achievements</h3>";
 app.appendChild(miscellColumn);
+
+miscellColumn.style.backgroundImage =
+  'url("https://img.craftpix.net/2023/10/Free-Summer-Pixel-Art-Backgrounds3.jpg")';
+miscellColumn.style.backgroundSize = "cover";
+miscellColumn.style.backgroundPosition = "center";
+miscellColumn.style.backgroundRepeat = "no-repeat";
+miscellColumn.style.borderRadius = "8px";
+miscellColumn.style.position = "relative";
+miscellColumn.style.overflow = "hidden";
 
 // achievements box
 const achievementsBox = document.createElement("div");
