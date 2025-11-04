@@ -38,3 +38,9 @@ adds to the damage formula
 box called charm: level 0 – 2 gold
 
 reset button – unlocks after level 100 – multiplies any exp and gold gained with each reset ( 1 reset makes it all be multiplied by 2, 2 resets makes it all be multiplied by 3, etc ) and then everything is set to base – level 0, 5 stat points, etc.
+
+change 1: add a picture to the monster box and have it move when its attacked (inspo from https://dstiscar.github.io/cmpm-121-f25-d1-dstiscar/)
+
+change 2: added background pictures to all 3 columns (inspo from https://noah2271.github.io/cmpm-121-incremental-nbilledo/)
+
+note 1: oct 31: changes not implemented yet. will update this when i do add it
