@@ -300,6 +300,20 @@ enemyNameDisplay.style.fontWeight = "bold";
 enemyNameDisplay.style.color = "#333";
 enemyNameDisplay.style.fontSize = "14px";
 
+// create image element
+const enemyImage = document.createElement("img");
+Object.assign(enemyImage.style, {
+  width: "120px",
+  height: "120px",
+  objectFit: "contain",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  transition: "transform 0.1s ease",
+});
+
+enemyBox.appendChild(enemyImage);
 enemyBox.appendChild(hpDisplay);
 enemyBox.appendChild(enemyNameDisplay);
 combatColumn.appendChild(enemyBox);
@@ -345,6 +359,19 @@ function spawnEnemy() {
 
   currentEnemy = isMonster ? "Monster" : "Training Dummy";
 
+  // Set image source
+  if (currentEnemy === "Training Dummy") {
+    enemyImage.src =
+      "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e57c0ca5-c162-43e7-b0dc-40f215c30321/di9bip6-fe55068c-72c3-4510-bbc0-7cb02a44e17c.png/v1/fill/w_320,h_320/2d_dummy_sprite_by_retronc_di9bip6-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MzIwIiwicGF0aCI6Ii9mL2U1N2MwY2E1LWMxNjItNDNlNy1iMGRjLTQwZjIxNWMzMDMyMS9kaTliaXA2LWZlNTUwNjhjLTcyYzMtNDUxMC1iYmMwLTdjYjAyYTQ0ZTE3Yy5wbmciLCJ3aWR0aCI6Ijw9MzIwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.uTX8d0eoYACnjMsI6FDksB9HI1xtFigzdO4Uq3vkl2A";
+  } else {
+    enemyImage.src =
+      "https://media.moddb.com/images/downloads/1/219/218099/ghost.png";
+  }
+
+  // Reset any shake
+  enemyImage.style.transform = "translate(-50%, -50%)";
+
+  // Set HP
   let minHP: number, maxHP: number;
   if (level < 5) {
     minHP = 25;
@@ -356,7 +383,6 @@ function spawnEnemy() {
     minHP = 75;
     maxHP = 125;
   }
-
   enemyHP = Math.floor(minHP + Math.random() * (maxHP - minHP + 1));
   maxEnemyHP = enemyHP;
 
@@ -389,6 +415,18 @@ attackButton.addEventListener("click", () => {
 
   // apply damage immediately
   enemyHP -= damage;
+
+  // Shake animation!
+  enemyImage.style.transform = "translate(-52%, -50%)";
+  setTimeout(() => {
+    enemyImage.style.transform = "translate(-48%, -50%)";
+    setTimeout(() => {
+      enemyImage.style.transform = "translate(-52%, -50%)";
+      setTimeout(() => {
+        enemyImage.style.transform = "translate(-50%, -50%)"; // back to center
+      }, 50);
+    }, 50);
+  }, 50);
 
   // hpdate hp display
   hpDisplay.textContent = `HP: ${Math.max(0, Math.floor(enemyHP))}`;
